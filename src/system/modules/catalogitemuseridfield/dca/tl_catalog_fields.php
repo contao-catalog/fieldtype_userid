@@ -28,7 +28,7 @@
  */
 
 // Palettes
-$GLOBALS['TL_DCA']['tl_catalog_fields']['palettes']['useridfield'] = 'name,description,colName,type,useridfield';
+$GLOBALS['TL_DCA']['tl_catalog_fields']['palettes']['useridfield'] = 'name,description,colName,type,useridfield;{display_legend},titleField';
 
 // register to catalog module that we provide the useridfield as field type.
 $GLOBALS['TL_DCA']['tl_catalog_fields']['fields']['type']['options'][] = 'useridfield';

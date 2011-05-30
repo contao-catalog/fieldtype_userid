@@ -1,17 +1,7 @@
 <?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
 
 /**
- * TYPOlight webCMS
- *
- * The TYPOlight webCMS is an accessible web content management system that 
- * specializes in accessibility and generates W3C-compliant HTML code. It 
- * provides a wide range of functionality to develop professional websites 
- * including a built-in search engine, form generator, file and user manager, 
- * CSS engine, multi-language support and many more. For more information and 
- * additional TYPOlight applications like the TYPOlight MVC Framework please 
- * visit the project website http://www.typolight.org.
- *
- * This is the catalog cataloghitsfield extension file.
+ * This is the cataloguseridfield extension file.
  *
  * PHP version 5
  * @copyright  Christian Schiffler 2009
@@ -22,7 +12,8 @@
  */
 
 // class to manipulate the field info to be as we want it to be, to render it and to make editing possible.
-class CatalogUserIdField extends Backend {
+class CatalogUserIdField extends Frontend
+{
 	public function onSave($varValue, DataContainer $dc) {
 		// force to our userid.
 		if(FE_USER_LOGGED_IN && !BE_USER_LOGGED_IN)
@@ -33,6 +24,7 @@ class CatalogUserIdField extends Backend {
 		// BE or not logged in.
 		return $varValue;
 	}
+
 	public function onLoad($varValue, DataContainer $dc) {
 		return $varValue;
 	}
@@ -48,6 +40,35 @@ class CatalogUserIdField extends Backend {
 		}
 		// BE or not logged in.
 		return false;
+	}
+
+	public function parseValue($id, $k, $raw, $blnImageLink, $objCatalog, $objModule)
+	{
+		$objUser = $this->Database->prepare('SELECT * FROM tl_member WHERE id=?')->execute($raw);
+		return array
+			(
+			 	'items'	=> array($objUser->row()),
+				'values' => array($objUser->row()),
+			 	'html'  => '',
+			);
+	}
+
+	public function generateFieldEditor(&$field, $objRow)
+	{
+		// TODO: shall we restrict this to Contao admins?
+		if(TL_MODE == 'BE' && BE_USER_LOGGED_IN)
+		{
+			$objUser = $this->Database->prepare('SELECT * FROM tl_member')->execute();
+			$arrOptions = array();
+			while($objUser->next())
+			{
+				$arrOptions[$objUser->id] = sprintf('%s, %s', $objUser->firstname, $objUser->lastname);
+			}
+			$field['label'] = &$objRow->name;
+			$field['title'] = &$objRow->description;
+			$field['inputType'] = 'select';
+			$field['options'] = $arrOptions;
+		}
 	}
 }
 ?>

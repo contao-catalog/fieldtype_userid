@@ -35,19 +35,24 @@ $GLOBALS['BE_MOD']['content']['catalog']['fieldTypes']['useridfield'] = array
 		// hopefully never ever someone will add a widget with that name. 
 		// I simply needed an invisible one here :)
 		'inputType' => 'hidden',
+		'foreignKey'              => 'tl_member.username',
 		'eval'      => array
 		(
-			'doNotSaveEmpty'=>true,
+			'saveAlways' => true,
+			'doNotSaveEmpty' => true,
 		),
 		'save_callback' => array(array('CatalogUserIdField', 'onSave')),
 		'load_callback' => array(array('CatalogUserIdField', 'onLoad')),
 	),
 	'sqlDefColumn' => "INTEGER NOT NULL default 0",
 	'checkPermissionFERecordEdit' => array(array('CatalogUserIdField', 'checkPermissionFERecordEdit')),
+	'parseValue' => array(array('CatalogUserIdField', 'parseValue')),
+	'generateFieldEditor' => array(array('CatalogUserIdField', 'generateFieldEditor')),
 );
 
 $GLOBALS['BE_MOD']['content']['catalog']['typesCatalogFields'][] = 'useridfield';
 $GLOBALS['BE_MOD']['content']['catalog']['typesMatchFields'][] = 'useridfield';
 $GLOBALS['BE_MOD']['content']['catalog']['typesEditFields'][] = 'useridfield';
+$GLOBALS['BE_MOD']['content']['catalog']['typesReferenceFields'][] = 'useridfield';
 
 ?>
